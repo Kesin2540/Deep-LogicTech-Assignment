@@ -104,7 +104,15 @@ def NormTime(dt):
         return dt.replace(tzinfo=None)
     return dt
 
-validArticles = [a for a in articles if isinstance(a.get("finalTime"), datetime)]
+unique = []
+seenLinks = set()
+for article in articles:
+    link = article.get("link")
+    if link not in seenLinks:
+        seenLinks.add(link)
+        unique.append(article)
+
+validArticles = [a for a in unique if isinstance(a.get("finalTime"), datetime)]
 
 for article in validArticles:
     article["normTime"] = NormTime(article["finalTime"])
